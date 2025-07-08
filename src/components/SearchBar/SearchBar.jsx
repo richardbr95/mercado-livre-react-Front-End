@@ -1,12 +1,27 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { BsSearch } from "react-icons/bs";
 import "./SearchBar.css";
+import mockProducts from "../../api/mockProducts";
+import AppContext from "../../context/AppContext";
 
 function SearchBar() {
   const [searchValue, setSearchValue] = useState("");
 
+  const { setProducts, setLoading } = useContext(AppContext);
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    const products = mockProducts.filter((product) => {
+      return product.title.toLowerCase().includes(searchValue.toLowerCase());
+    });
+    setProducts(products);
+    setLoading(false);
+    setSearchValue("");
+  };
+
   return (
-    <form className="search-bar">
+    <form className="search-bar" onSubmit={handleSearch}>
       <input
         type="search"
         value={searchValue}
